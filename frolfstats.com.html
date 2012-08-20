@@ -1,0 +1,60 @@
+
+
+<head>
+  <title>frolfstats.com</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+</head>
+
+<body>
+  
+  <div class="span4">
+
+    {{>topbar}}
+
+    <div class="messages"></div> 
+
+    {{>body}}
+
+  </div>
+  
+</body>
+
+<template name="topbar">
+  <h1>{{course}}</h1>
+</template>
+
+<template name="body">
+  Course Id : {{course_id}}
+  {{#if course_id}}
+    {{>find}}
+  {{else}}
+    {{>course}}
+  {{/if}}  
+</template>
+
+<template name="find">
+
+  <form id="course_form" action="">
+    
+    <h2>Let's find a course:</h2>
+    
+    <input placeholder="zipcode" type="text" id="term" />
+
+  </form>
+
+</template>
+
+<template name="result">
+  <tr>
+    <td>
+      <a data-course-id="{{_id}}" href="#">Name: {{name}}</a>
+      <a data-course-id="{{_id}}" href="#">ZipCode: {{zipcode}} </a>
+    </td>
+  </tr>
+</template>
+
+<template name="course">
+
+  <a class="btn btn-primary" href="#">Start A Game</a>
+  
+</template>
