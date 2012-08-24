@@ -24,11 +24,14 @@
 </template>
 
 <template name="body">
-  Course Id : {{course_id}}
   {{#if course_id}}
-    {{>find}}
+    {{#if hole_id}}
+      {{>hole}}
+    {{else}}
+      {{>course}}
+    {{/if}}
   {{else}}
-    {{>course}}
+    {{>find}}
   {{/if}}  
 </template>
 
@@ -36,19 +39,23 @@
 
   <form id="course_form" action="">
     
-    <h2>Let's find a course:</h2>
-    
     <input placeholder="zipcode" type="text" id="term" />
 
   </form>
+
+  <table class="table-stripped" id="results">
+    {{#each results}}
+      {{>result}}
+    {{/each}}
+  </table>
 
 </template>
 
 <template name="result">
   <tr>
     <td>
-      <a data-course-id="{{_id}}" href="#">Name: {{name}}</a>
-      <a data-course-id="{{_id}}" href="#">ZipCode: {{zipcode}} </a>
+      <a data-course-id="{{_id}}" href="#">{{name}}</a>
+      <a data-course-id="{{_id}}" href="#">{{zipcode}}</a>
     </td>
   </tr>
 </template>
@@ -57,4 +64,50 @@
 
   <a class="btn btn-primary" href="#">Start A Game</a>
   
+</template>
+
+<template name="hole">
+  <h2>
+    Hole : {{hole_id}}, Par : {{par}}
+  </h2>
+  <a class="next-hole btn btn-primary" href="#">Next Hole</a>
+  <p>
+  <div class="btn-group btn-large par">
+    <button class="btn btn-large minus">-</button>
+    <button class="btn btn-large">{{par}}</button>
+    <button class="btn btn-large plus">+</button>
+  </div>
+  </p>  
+  <p>
+  <div class="btn-group btn-large score">
+    <button class="btn btn-large minus">-</button>
+    <button class="btn btn-large">{{score}}</button>
+    <button class="btn btn-large plus">+</button>
+  </div>
+  </p>
+  <p>
+    <strong>Hazards:</strong>
+    <label>Tree<label>
+    <input id="tree" type="checkbox" />
+    <label>Water</label>
+    <input id="water" type="checkbox" />
+  </p>
+
+  <p>
+    <label>Is this the last hole?</label>
+    <input id="lasthole" type="checkbox" />
+  </p>
+
+</template>
+
+<template name="game-report">
+
+</template>
+
+<template name="user-report">
+
+</template>
+
+<template name="course-report">
+
 </template>
