@@ -62,41 +62,65 @@
 
 <template name="course">
 
+  <br />
+  <br />
   <a class="btn btn-primary" href="#">Start A Game</a>
   
 </template>
 
 <template name="hole">
   <h2>
-    Hole : {{hole_id}}, Par : {{par}}
+    Hole : {{hole_id}}
   </h2>
-  <a class="next-hole btn btn-primary" href="#">Next Hole</a>
-  <p>
-  <div class="btn-group btn-large par">
-    <button class="btn btn-large minus">-</button>
-    <button class="btn btn-large">{{par}}</button>
-    <button class="btn btn-large plus">+</button>
-  </div>
-  </p>  
-  <p>
-  <div class="btn-group btn-large score">
-    <button class="btn btn-large minus">-</button>
-    <button class="btn btn-large">{{score}}</button>
-    <button class="btn btn-large plus">+</button>
-  </div>
-  </p>
-  <p>
-    <strong>Hazards:</strong>
-    <label>Tree<label>
-    <input id="tree" type="checkbox" />
-    <label>Water</label>
-    <input id="water" type="checkbox" />
-  </p>
 
-  <p>
-    <label>Is this the last hole?</label>
-    <input id="lasthole" type="checkbox" />
-  </p>
+  <form class="form-horizontal">
+
+  <button class="next-hole btn btn-primary" href="#">Next Hole</button>
+  <br />
+  <br />
+  <div class="control-group">
+    <label class="control-label">Par</label>
+    <div class="controls">
+      <div class="btn-group btn-large par">
+        <button class="btn btn-large minus">-</button>
+        <button class="btn btn-large">{{par}}</button>
+        <button class="btn btn-large plus">+</button>
+      </div>      
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Score</label>
+    <div class="controls">
+      <div class="btn-group btn-large score">
+        <button class="btn btn-large minus">-</button>
+        <button class="btn btn-large">{{score}}</button>
+        <button class="btn btn-large plus">+</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="control-group">
+    <label class="control-label">Tree?</label>
+    <div class="controls">
+      <input id="tree" type="checkbox" />
+    </div>
+  </div>
+
+  <div class="control-group">  
+    <label class="control-label">Water?</label>
+    <div class="controls">
+      <input id="water" type="checkbox" />
+    </div>
+  </div>
+
+  <div class="control-group"> 
+    <label class="control-label">Last Hole?</label>
+    <div class="controls">
+      <input id="lasthole" type="checkbox" />
+    </div>
+  </div>
+
+  </form>
 
 </template>
 

@@ -73,13 +73,25 @@ if (Meteor.is_client) {
 
   Template.hole.events = {
 
-    'click .minus' : function(){
+    'click .par .minus' : function(){
+      var game = Games.findOne({_id:Session.get('game')});
+      game.scorecard[game.currentHole - 1].par--;
+      Games.update({_id:Session.get('game')}, game);
+    },
+
+    'click .par .plus' : function(){
+      var game = Games.findOne({_id:Session.get('game')});
+      game.scorecard[game.currentHole - 1].par++;
+      Games.update({_id:Session.get('game')},game);
+    },
+
+    'click .score .minus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score--;
       Games.update({_id:Session.get('game')}, game);
     },
 
-    'click .plus' : function(){
+    'click .score .plus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score++;
       Games.update({_id:Session.get('game')},game);
