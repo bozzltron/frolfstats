@@ -10,23 +10,22 @@ Session.set('results', null);
 
 Session.set('game', null);
 
-if (Meteor.is_client) {
-
-  Meteor.autosubscribe(function () {
-    Meteor.subscribe("hole", Session.get("hole_id"));
-    Meteor.subscribe("scorecard", Session.get("scorecard"));
-  });
+if (Meteor.is_client) { 
   
+  Template.find.preserve({
+    'input[id]': function (node) { return node.id; }
+  });
+
   Template.topbar.course = function(){
     var sesh = Session.get('course_id');
     return sesh ? Courses.findOne({_id:sesh}).name : 'Find a Course';
   };
 
-  Template.find.events = {
+  Template.find.events = ({
     'keyup #term"' : function (e) {
-      Session.set('results', Courses.find({zipcode:parseInt($('#term').val(),10)}) );
+      Session.set('results', Courses.find({zipcode:parseInt($('#term').val(),10)}));
     }
-  };
+  });
 
   Template.find.results = function(){
     return Session.get('results');
@@ -55,6 +54,10 @@ if (Meteor.is_client) {
   Template.body.course_id = function(){
     return Session.get('course_id');  
   };
+
+  Template.body.last_hole = function(){
+    return Session.get('last_hole');  
+  };  
 
   Template.body.hole_id = Template.hole.hole_id = function(){
     var game = Games.findOne({_id:Session.get('game')});
@@ -102,9 +105,58 @@ if (Meteor.is_client) {
       game.scorecard[game.currentHole] = {score:3, par:3}; 
       game.currentHole++;
       Games.update({_id:Session.get('game')},game);
+    },
+
+    'click #lasthole' : function() {
+      Session.set('last_hole', true); 
+    }
+
+
+  };
+
+  Template.gamereport.numOfHoles = function(){
+    var game = Games.findOne({_id:Session.get('game')});
+    return game.scorecard.length;
+  };
+
+  Template.gamereport.finalScore = function(){
+    var game = Games.findOne({_id:Session.get('game')});
+    var parSum = 0;
+    var scoreSum = 0;
+    $.each(game.scorecard, function(i, e){
+      parSum += e.par;
+      scoreSum += e.score;
+    });
+    return scoreSum - parSum;
+  };
+
+  Template.gamereport.init = Template.hole.init = function(){
+
+    google.load("visualization", "1", {packages:["corechart"]});
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['Year', 'Sales', 'Expenses'],
+        ['2004',  1000,      400],
+        ['2005',  1170,      460],
+        ['2006',  660,       1120],
+        ['2007',  1030,      540]
+      ]);
+
+      var options = {
+        title: 'Company Performance'
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
     }
 
   };
+
+  // Confirm before leaving the page
+  window.onbeforeunload = function() {
+    return "You will loose your data if you leave.";
+  }
 
 }
 
