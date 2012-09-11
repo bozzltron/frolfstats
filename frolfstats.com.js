@@ -36,7 +36,7 @@ if (Meteor.is_client) {
 
       // Start a game
       if(!Session.get('game')){
-        Games.insert({scorecard:[{score:3, par:3}], currentHole:1, course:Session.get('course_id')}, function(err, result){
+        Games.insert({scorecard:[{score:3, par:3}], currentHole:1, scoreOverTime:[0], course:Session.get('course_id')}, function(err, result){
 
           Session.set('game', result);
           console.log('started game ' + Session.get('game'));
@@ -91,18 +91,21 @@ if (Meteor.is_client) {
     'click .score .minus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score--;
+      game.scoreOverTime[game.currentHole-1] =  game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
       Games.update({_id:Session.get('game')}, game);
     },
 
     'click .score .plus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score++;
+      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
       Games.update({_id:Session.get('game')},game);
     },
 
     'click .next-hole' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole] = {score:3, par:3}; 
+      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
       game.currentHole++;
       Games.update({_id:Session.get('game')},game);
     },
@@ -130,26 +133,73 @@ if (Meteor.is_client) {
     return scoreSum - parSum;
   };
 
-  Template.gamereport.init = Template.hole.init = function(){
+  Template.gamereport.rendered = Template.hole.rendered = function(){
 
-    google.load("visualization", "1", {packages:["corechart"]});
-    google.setOnLoadCallback(drawChart);
-    function drawChart() {
-      var data = google.visualization.arrayToDataTable([
-        ['Year', 'Sales', 'Expenses'],
-        ['2004',  1000,      400],
-        ['2005',  1170,      460],
-        ['2006',  660,       1120],
-        ['2007',  1030,      540]
-      ]);
+    var game = Games.findOne({_id:Session.get('game')});
 
-      var options = {
-        title: 'Company Performance'
-      };
+    // Build arrays
+    var labelAry = [];
+    $.each(game.scoreOverTime, function(i, e){
+      labelAry.push('Hole ' + (i + 1));
+    });
 
-      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, options);
+    console.log('scores', game.scoreOverTime);
+    console.log('labels', labelAry);
+
+    var obj = new RGraph.Line('cvs', game.scoreOverTime);
+    obj.Set('chart.xaxispos', 'center');
+    obj.Set('chart.yaxispos', 'left');
+    obj.Set('chart.ylabels', false);
+    obj.Set('chart.background.grid.vlines', false);
+    obj.Set('chart.background.grid.border', false);
+    obj.Set('chart.units.post', ' score');
+    obj.Set('chart.hmargin', 0);
+    obj.Set('chart.labels', labelAry);
+    obj.Set('chart.linewidth', 7);
+    obj.Set('chart.shadow', true);
+    obj.Set('chart.shadow.offsetx', 0);
+    obj.Set('chart.shadow.offsety', 0);
+    obj.Set('chart.shadow.offsety', 0);
+    obj.Set('chart.shadow.blur', 15);
+    obj.Set('chart.shadow.color', '#aaa');
+    obj.Set('chart.colors', ['red','black']);
+    obj.Set('chart.curvy', true);
+    obj.Set('chart.curvy.tickmarks', false);
+
+
+    /**
+    * This draws the scale for the line chart manually
+    */
+    obj.ondraw = function (obj)
+    {
+        var ca = obj.canvas;
+        var co = obj.context;
+
+        co.fillStyle = '#666';
+        var units = obj.Get('chart.units.post');
+        var size = 8;
+        var font = 'Arial';
+
+        for (var i=0; i<obj.scale.length; i++) {
+
+            var x    = obj.Get('chart.gutter.left') - 5;
+            var y    = obj.getYCoord(obj.scale[i]) - 2;
+            var text = obj.scale[i].toString() + units;
+
+            RGraph.Text(co, font,size,x,y,text)
+        }
+        
+        // Draw the zero (it isn't normally drawn)
+        RGraph.Text(co,font,size,x,ca.height - obj.Get('chart.gutter.bottom') - 2,'0' + units);
+        
+        // Because we're not drawing an axis, draw an extra grid line
+        co.beginPath();
+            co.strokeStyle = obj.Get('chart.background.grid.color');
+            co.moveTo(obj.Get('chart.gutter.left'), AA(this, ca.height - obj.Get('chart.gutter.bottom')));
+            co.lineTo(ca.width - obj.Get('chart.gutter.right'), AA(this, obj.canvas.height - obj.Get('chart.gutter.bottom')) );
+        co.stroke();
     }
+        RGraph.Effects.Line.jQuery.Trace(obj, {'duration': 750});
 
   };
 

@@ -93,12 +93,12 @@
   <h2>
     Hole : {{hole_id}}
   </h2>
-  <div id="chart_div" style="width:200px; height: 100px;"></div>
+  <canvas id="cvs" width="400" height="200">[No canvas support]</canvas>
 
   <table class="table">
     <tr>
-        <td></td>
-        <td><button class="next-hole btn btn-primary" href="#">Next Hole</button></td>
+        <td><a class="back btn btn-primary" href="#">Back</a></td>
+        <td><a class="next-hole btn btn-primary" href="#">Next Hole</a></td>
     </tr>
     <tr>
         <td>Score</td>
@@ -136,8 +136,7 @@
   <h2>Stats</h2>
   <p>Here's how you did.</p>
   <h3>Out of {{numOfHoles}} you got : {{finalScore}}</h3>
-
-  <div id="chart_div" style="width:200px; height: 100px;"></div>
+  <canvas id="cvs" width="400" height="200">[No canvas support]</canvas>
  
 </template>
 
