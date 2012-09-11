@@ -74,12 +74,11 @@ if (Meteor.is_client) {
     return game ? game.scorecard[game.currentHole - 1].par : '';
   };
 
-  function calcScore(ary) {
-    var sum = 0;
-    $.each(ary, function(i, e){
-      sum = sum + e;
-    });
-    return sum;
+  function calcScore(game) {
+    var carryOver = game.scoreOverTime[game.currentHole-2] ? game.scoreOverTime[game.currentHole-2] : 0;
+    game.scoreOverTime[game.currentHole-1] = carryOver + (game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par);
+    console.log(carryOver, '+', game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par, '=', game.scoreOverTime[game.currentHole-1]);
+    return game;
   }
 
   Template.hole.events = {
@@ -99,21 +98,21 @@ if (Meteor.is_client) {
     'click .score .minus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score--;
-      game.scoreOverTime[game.currentHole-1] =  game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
+      game = calcScore(game);
       Games.update({_id:Session.get('game')}, game);
     },
 
     'click .score .plus' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole - 1].score++;
-      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
+      game = calcScore(game);
       Games.update({_id:Session.get('game')},game);
     },
 
     'click .next-hole' : function(){
       var game = Games.findOne({_id:Session.get('game')});
       game.scorecard[game.currentHole] = {score:3, par:3}; 
-      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
+      game = calcScore(game);
       game.currentHole++;
       Games.update({_id:Session.get('game')},game);
     },
@@ -121,8 +120,7 @@ if (Meteor.is_client) {
     'click #lasthole' : function() {
       var game = Games.findOne({_id:Session.get('game')});
       Session.set('last_hole', true); 
-      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
-
+      game = calcScore(game);
     },
 
     'click .back' : function() {
