@@ -74,6 +74,14 @@ if (Meteor.is_client) {
     return game ? game.scorecard[game.currentHole - 1].par : '';
   };
 
+  function calcScore(ary) {
+    var sum = 0;
+    $.each(ary, function(i, e){
+      sum = sum + e;
+    });
+    return sum;
+  }
+
   Template.hole.events = {
 
     'click .par .minus' : function(){
@@ -111,9 +119,21 @@ if (Meteor.is_client) {
     },
 
     'click #lasthole' : function() {
+      var game = Games.findOne({_id:Session.get('game')});
       Session.set('last_hole', true); 
-    }
+      game.scoreOverTime[game.currentHole-1] = game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par;
 
+    },
+
+    'click .back' : function() {
+      var game = Games.findOne({_id:Session.get('game')});
+      if(game.currentHole > 1){
+        game.currentHole--;
+      } else {
+        game.currentHole = null;
+      }
+      Games.update({_id:Session.get('game')},game);
+    },
 
   };
 
@@ -140,7 +160,7 @@ if (Meteor.is_client) {
     // Build arrays
     var labelAry = [];
     $.each(game.scoreOverTime, function(i, e){
-      labelAry.push('Hole ' + (i + 1));
+      labelAry.push(i + 1);
     });
 
     console.log('scores', game.scoreOverTime);
@@ -155,7 +175,7 @@ if (Meteor.is_client) {
     obj.Set('chart.units.post', ' score');
     obj.Set('chart.hmargin', 0);
     obj.Set('chart.labels', labelAry);
-    obj.Set('chart.linewidth', 7);
+    obj.Set('chart.linewidth', 5);
     obj.Set('chart.shadow', true);
     obj.Set('chart.shadow.offsetx', 0);
     obj.Set('chart.shadow.offsety', 0);
