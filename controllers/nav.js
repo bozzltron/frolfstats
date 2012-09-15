@@ -16,6 +16,7 @@ if (Meteor.is_client) {
       if(user) {
         modal_alert('Welcome Back :' + alias, 'success');
         Session.set('user', user);
+        $('#signin').modal('hide');
       } else {
         modal_alert('Your Alias And Pin Did Not Match', 'error');
       }
@@ -58,7 +59,9 @@ if (Meteor.is_client) {
           game.user = user;
           Games.update({_id:Session.get('game')}, game);
         }
+        Session.set('user', user);
         modal_alert('Your Created A New Account As :' + alias, 'success');
+        $('#signin').modal('hide');
       }
 
       return false;

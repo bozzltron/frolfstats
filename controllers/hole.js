@@ -12,9 +12,16 @@ if (Meteor.is_client) {
     return game ? game.scorecard[game.currentHole - 1].par : '';
   };
 
+  Template.hole.party = function() {
+    var game = Games.findOne({_id:Session.get('game')}); 
+    var party = Games.find({course:Session.get('course_id'), currentHole:game.currentHole});    
+    return party;
+  };
+
   function calcScore(game) {
     var carryOver = game.scoreOverTime[game.currentHole-2] ? game.scoreOverTime[game.currentHole-2] : 0;
     game.scoreOverTime[game.currentHole-1] = carryOver + (game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par);
+    game.currentScore = game.scoreOverTime[game.currentHole-1];
     console.log(carryOver, '+', game.scorecard[game.currentHole-1].score - game.scorecard[game.currentHole-1].par, '=', game.scoreOverTime[game.currentHole-1]);
     return game;
   }

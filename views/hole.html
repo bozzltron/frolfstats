@@ -2,6 +2,12 @@
   <h2>
     Hole : {{hole_id}}
   </h2>
+
+  <h3>Players</h3>
+  {{#each party}}
+    <div>{{user.alias}} {{currentScore}}</div>
+  {{/each}}
+
   <canvas id="cvs" width="300" height="200"></canvas>
 
   <table class="table">
