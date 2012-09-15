@@ -4,12 +4,11 @@
 Courses = new Meteor.Collection("courses");
 Games = new Meteor.Collection("games");
 Users = new Meteor.Collection("users");
+Groups = new Meteor.Collection("groups");
 
-// ID of currently selected course
+// Session vars
 Session.set('course_id', null);
-
 Session.set('results', null);
-
 Session.set('game', null);
 
 if (Meteor.is_client) { 
@@ -19,6 +18,36 @@ if (Meteor.is_client) {
     return "You will loose your data if you leave.";
   }
 
+  // Setup home view
+  var homeView = Backbone.View.extend({
+    initialize: function() {
+      _.bindAll(this, 'render');
+      this.template = Meteor.render(function(){ return Template.body() });
+      this.render();
+    },
+    render: function() {
+      $(this.el).empty().append(this.template);
+    }
+  });
+
+  var homeRouter = Backbone.Router.extend({
+
+    routes : {
+      '#' : 'body',
+      '' : 'body'
+    },
+
+    body : function(){
+      new homeView({el:$('#body')});
+    }
+
+  });
+
+  // Kickoff Router
+  new homeRouter();
+
+  // Backbone Router
+  Backbone.history.start();
 }
 
 if (Meteor.is_server) {

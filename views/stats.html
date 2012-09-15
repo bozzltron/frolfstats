@@ -1,0 +1,19 @@
+<template name="stats">
+<h1>{{alias}} stats</h1>
+
+<h2>Games</h2>
+<table class="table">
+	<tr>
+		<th>Date</th>
+		<th>Course</th>
+		<th>Score</th>
+	</tr>
+	{{#each games}}
+		<tr>
+			<td>{{date}}</td>
+			<td>{{courseName}}</td>
+			<td>{{currentScore}}</td>
+		</tr>
+	{{/each}}
+</table>
+</template>
