@@ -2,7 +2,7 @@
 if (Meteor.is_client) { 
 
   function modal_alert(msg, type) {
-    $(".modal-messages").append($('<div class="alert alert-'+type+'">').html(msg));
+    $(".modal-messages").empty().append($('<div class="alert alert-'+type+'">').html(msg));
   }
 
   Template.nav.events = {
@@ -12,13 +12,46 @@ if (Meteor.is_client) {
       var pin = $('#pin').val();
 
       // Look for the alias
-      if(Users.findOne({alias:alias})) {
-        var user = Users.findOne({alias:alias, pin:pin});
+      var user = Users.findOne({alias:alias, pin:pin});
+      if(user) {
         modal_alert('Welcome Back :' + alias, 'success');
-        if(!user) {
-          modal_alert('This Alias Already Exists. Your Pin Did Not Match', 'error');
-        }
+        Session.set('user', user);
       } else {
+        modal_alert('Your Alias And Pin Did Not Match', 'error');
+      }
+      
+      return false;
+    },
+
+    'click #btn-register' : function() {
+
+      var alias = $('#alias').val();
+      var pin = $('#pin').val();  
+      var user = Users.findOne({alias:alias, pin:pin});
+      var username = Users.findOne({alias:alias});  
+      var valid = true;        
+
+      if(alias == '' || pin == ''){
+        modal_alert('You Cannot Leave Fields Empty :', 'error');
+        valid = false;
+      }
+
+      if(pin.length != 4){
+        modal_alert('Your Pin Must Be 4 Digits Long :', 'error');
+        valid = false;
+      }
+
+      if(user) {
+        modal_alert('This User Already Exists.  Try Logging In.', 'error');
+        valid = false;        
+      }
+
+      if(username) {
+        modal_alert('This Alias Is Already In Use.  Try Again.', 'error');
+        valid = false;        
+      }      
+
+      if(valid) {
         var user = Users.insert({alias:alias, pin:pin});
         var game = Games.findOne({_id:Session.get('game')});
         if(game) {
@@ -27,15 +60,14 @@ if (Meteor.is_client) {
         }
         modal_alert('Your Created A New Account As :' + alias, 'success');
       }
-      
-      Session.set('user', user);
 
       return false;
     }
+
   };
 
   Template.nav.alias = function(){
-    var user = Users.findOne({_id:Session.get('user')});
+    var user = Session.get('user');
     return user ? user.alias : null;
   };
   
