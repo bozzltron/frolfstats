@@ -1,0 +1,15 @@
+<template name="find">
+
+  <form id="course_form" action="">
+    
+    <input placeholder="zipcode" type="text" id="term" />
+
+  </form>
+
+  <table class="table-stripped" id="results">
+    {{#each results}}
+      {{>result}}
+    {{/each}}
+  </table>
+
+</template>

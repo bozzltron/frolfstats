@@ -1,30 +1,12 @@
 
-
 <head>
   <title>frolfstats.com</title>
   <meta name="viewport" content="width=device-width, initial-scale=1"> 
 </head>
 
 <body>
-  <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">Frolf<em>stats</em></a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#game">Game</a></li>
-              <li><a href="#stats">Stats</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
-    </div>
+ 
+  {{>nav}}
 
   <div class="container">
 
@@ -37,114 +19,3 @@
   </div>
   
 </body>
-
-<template name="topbar">
-  <h2>{{course}}</h2>
-</template>
-
-<template name="body">
-  {{#if course_id}}
-    {{#if hole_id}}
-      {{#if last_hole}}
-        {{>gamereport}}
-      {{else}}
-        {{>hole}}
-      {{/if}}
-    {{else}}
-      {{>course}}
-    {{/if}}
-  {{else}}
-    {{>find}}
-  {{/if}}  
-</template>
-
-<template name="find">
-
-  <form id="course_form" action="">
-    
-    <input placeholder="zipcode" type="text" id="term" />
-
-  </form>
-
-  <table class="table-stripped" id="results">
-    {{#each results}}
-      {{>result}}
-    {{/each}}
-  </table>
-
-</template>
-
-<template name="result">
-  <tr>
-    <td>
-      <a data-course-id="{{_id}}" href="#">{{name}}</a>
-      <a data-course-id="{{_id}}" href="#">{{zipcode}}</a>
-    </td>
-  </tr>
-</template>
-
-<template name="course">
-
-  <br />
-  <a class="btn btn-primary" href="#">Start A Game</a>
-  
-</template>
-
-<template name="hole">
-  <h2>
-    Hole : {{hole_id}}
-  </h2>
-  <canvas id="cvs" width="300" height="200"></canvas>
-
-  <table class="table">
-    <tr>
-        <td><a class="back btn btn-primary btn-large" href="#">Back</a></td>
-        <td><a class="next-hole btn btn-primary btn-large" href="#">Next Hole</a></td>
-    </tr>
-    <tr>
-        <td><h3>Score</h3></td>
-        <td>
-          <div class="btn-group btn-large score">
-            <button class="btn btn-large minus">-</button>
-            <button class="btn btn-large">{{score}}</button>
-            <button class="btn btn-large plus">+</button>
-          </div>
-        </td>
-    </tr>    
-    <tr>
-        <td><h3>Par</h3></td>
-        <td>
-          <div class="btn-group btn-large par">
-            <button class="btn btn-large minus">-</button>
-            <button class="btn btn-large">{{par}}</button>
-            <button class="btn btn-large plus">+</button>
-          </div>   
-        </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><a class="btn btn-danger btn-large" id="hazard">Hazard?</a></td>
-    </tr>
-    <tr>
-      <td></td>
-      <td><a class="btn btn-large" id="lasthole">Done</a></td>
-    </tr>    
-  </table>
-
-</template>
-
-<template name="gamereport">
-  <h2>Stats</h2>
-  <p>Here's how you did.</p>
-  <h3>Out of {{numOfHoles}} you got : {{finalScore}}</h3>
-  <canvas id="cvs" width="300" height="200">[No canvas support]</canvas>
- 
-</template>
-
-<template name="user-report">
-
-</template>
-
-<template name="course-report">
-
-</template>

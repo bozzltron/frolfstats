@@ -1,0 +1,42 @@
+<template name="hole">
+  <h2>
+    Hole : {{hole_id}}
+  </h2>
+  <canvas id="cvs" width="300" height="200"></canvas>
+
+  <table class="table">
+    <tr>
+        <td><a class="back btn btn-primary btn-large" href="#">Back</a></td>
+        <td><a class="next-hole btn btn-primary btn-large" href="#">Next Hole</a></td>
+    </tr>
+    <tr>
+        <td><h3>Score</h3></td>
+        <td>
+          <div class="btn-group btn-large score">
+            <button class="btn btn-large minus">-</button>
+            <button class="btn btn-large">{{score}}</button>
+            <button class="btn btn-large plus">+</button>
+          </div>
+        </td>
+    </tr>    
+    <tr>
+        <td><h3>Par</h3></td>
+        <td>
+          <div class="btn-group btn-large par">
+            <button class="btn btn-large minus">-</button>
+            <button class="btn btn-large">{{par}}</button>
+            <button class="btn btn-large plus">+</button>
+          </div>   
+        </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><a class="btn btn-danger btn-large" id="hazard">Hazard?</a></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td><a class="btn btn-large" id="lasthole">Done</a></td>
+    </tr>    
+  </table>
+
+</template>

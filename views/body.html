@@ -1,0 +1,15 @@
+<template name="body">
+  {{#if course_id}}
+    {{#if hole_id}}
+      {{#if last_hole}}
+        {{>gamereport}}
+      {{else}}
+        {{>hole}}
+      {{/if}}
+    {{else}}
+      {{>course}}
+    {{/if}}
+  {{else}}
+    {{>find}}
+  {{/if}}  
+</template>
