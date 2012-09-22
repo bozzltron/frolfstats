@@ -23,7 +23,7 @@ if (Meteor.is_client) {
       this.render();
     },
     render: function() {
-      $(this.el).empty().append(this.template);
+      $(this.el).append(this.template);
     }
   });
 
@@ -34,7 +34,14 @@ if (Meteor.is_client) {
     },
 
     stats : function(){
-      new statsView({el:$('#body')});
+      
+      $('.view').hide();
+      var stats = $("#stats");
+      if(stats.length === 0){
+        new statsView({el:$('#body')});
+      } else {
+        $('#stats').show();   
+      }
     }
 
   });

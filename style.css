@@ -4,8 +4,8 @@ table {
 	
 }
 
-td{width:50%; text-align:center;}
-tr td:nth-child(2) {text-align:right;}
-td .btn-group { float:right; padding-right:0;}
+.hole td{width:50%; text-align:center;}
+.hole tr td:nth-child(2) {text-align:right;}
+.hole td .btn-group { float:right; padding-right:0;}
 
 .navbar-fixed-top, .navbar-fixed-bottom { position:static; }

@@ -5,7 +5,7 @@ if (Meteor.is_client) {
   Template.course.name = function(){
     var sesh = Session.get('course_id');
     var course = Courses.findOne({_id:sesh});
-    return course ? course.name : 'Find a Course';
+    return (sesh && course) ? course.name : 'Find a Course';
   };
 
   Template.course.events = {

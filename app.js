@@ -21,12 +21,16 @@ if (Meteor.is_client) {
   // Setup home view
   var homeView = Backbone.View.extend({
     initialize: function() {
-      _.bindAll(this, 'render');
-      this.template = Meteor.render(function(){ return Template.body() });
-      this.render();
+      _.bindAll(this, 'render');  
+    },
+    template: function() {
+      Meteor.render(function() {
+        return Template.body();
+      });
     },
     render: function() {
-      $(this.el).empty().append(this.template);
+      console.log(this.el);
+      $(this.el).empty().append(this.template());
     }
   });
 
@@ -38,7 +42,8 @@ if (Meteor.is_client) {
     },
 
     body : function(){
-      new homeView({el:$('#body')});
+      $('.view').hide();
+      $('#home').show();
     }
 
   });
@@ -47,7 +52,9 @@ if (Meteor.is_client) {
   new homeRouter();
 
   // Backbone Router
-  Backbone.history.start();
+  Meteor.startup(function () {
+    Backbone.history.start();
+  });
 }
 
 if (Meteor.is_server) {
